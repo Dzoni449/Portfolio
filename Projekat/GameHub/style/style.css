@@ -1,0 +1,87 @@
+html, body {
+    height: 100%; 
+    margin: 0;    
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1; 
+}
+
+footer {
+    margin-top: auto; 
+    border-top: 1px solid #e0e0e0;
+    padding: 20px;
+    background-color: #f8f9fa; 
+    text-align: center;
+}
+
+.translate-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 18px;
+    cursor: pointer;
+    
+}
+.translate-btn:hover {
+    opacity: 0.8; 
+}
+.game-image {
+    width: 100%;   
+    height: 150px; 
+    object-fit: cover; 
+}
+
+.card {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    height: 300px; 
+}
+
+.card {
+    display: flex;
+    flex-direction: column; /* Postavi flex na vertikalno */
+    justify-content: center; /* Centriraj sadržaj unutar kartice */
+    height: 300px; /* Postavi visinu kartice */
+    transition: transform 0.3s, opacity 0.3s; /* Animacija za transformaciju i opacitet */
+    cursor: pointer; /* Promeni kursor kada se pređe preko kartice */
+    text-decoration: none; /* Ukloni podvlačenje za celu karticu */
+    border: 1px solid #e0e0e0; /* Dodaj svetlosivi border */
+            border-radius: 10px; /* Zaobljenost ivica kartice */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Blago senčenje */
+}
+
+
+.card:hover {
+    transform: translateY(-5px); 
+    opacity: 0.8; 
+    cursor:pointer;
+}
+
+.card-title {
+    font-size: 1.5rem; /* Veličina fonta naslova */
+    font-weight: bold; /* Podebljanje naslova */
+    color: #333; /* Boja naslova */
+}
+
+.card-text {
+    font-size: 1rem; /* Veličina fonta opisa */
+    color: #666; /* Boja opisa */
+    margin-top: 10px; /* Prostor iznad opisa */
+}
+.card a {
+    text-decoration: none; /* Ukloni podvlačenje */
+    color: inherit; /* Nasledi boju teksta iz roditeljskog elementa */
+}

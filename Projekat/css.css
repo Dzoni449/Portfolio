@@ -1,0 +1,259 @@
+* { 
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #3498db 25%, #8e44ad 75%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    color: #fff;
+    position: relative;
+}
+
+.container {
+    text-align: center;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.2);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    animation: fadeIn 1s ease-in-out forwards;
+    transform: scale(0.9);
+}
+
+header h1 {
+    font-size: 2.8rem;
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+    color: #fff;
+    animation: slideInDown 1s ease-in-out forwards;
+}
+
+header p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    color: #e0e0e0;
+    animation: slideInUp 1.2s ease-in-out forwards;
+}
+
+.projects {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping of project cards */
+    justify-content: center; /* Center cards in the row */
+    align-items: stretch; /* Ensure cards are the same height */
+}
+
+.project-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 10px;
+    flex: 0 1 calc(25% - 20px); /* Four cards per row */
+    max-width: calc(25% - 20px); /* Prevent exceeding 25% width */
+    min-width: 200px; /* Minimum width for cards */
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.project-card button {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.project-card button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+}
+
+.project-description {
+    font-size: 1rem;
+    color: #e0e0e0;
+    margin-top: 10px;
+}
+
+/* Floating animated shapes */
+.floating-shape {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 8s ease-in-out infinite;
+}
+
+.shape1 {
+    top: 10%;
+    left: 15%;
+    animation-delay: 0s;
+}
+
+.shape2 {
+    bottom: 15%;
+    right: 10%;
+    animation-delay: 6s;
+}
+
+.shape3 {
+    top: 20%;
+    right: 20%;
+    animation-delay: 4s;
+}
+
+.shape4 {
+    bottom: 25%;
+    left: 10%;
+    animation-delay: 2s;
+}
+
+.shape5 {
+    top: 30%;
+    left: 40%;
+    animation-delay: 1s;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+/* Translate button */
+.translate-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.translate-btn button {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.translate-btn button:hover {
+    background-color: #555;
+    transform: translateY(-5px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    body {
+        height: auto; /* Adjust body height for mobile view */
+        overflow: auto; /* Allow scrolling if content exceeds viewport */
+    }
+
+    .container {
+        padding: 20px; /* Reduce padding for smaller screens */
+        width: 90%; /* Make container width responsive */
+        margin: 0 auto; /* Center the container */
+    }
+
+    header h1 {
+        font-size: 2.2rem; /* Reduce font size for mobile */
+    }
+
+    header p {
+        font-size: 1rem; /* Reduce font size for mobile */
+    }
+
+    .projects {
+        flex-direction: column; /* Stack project cards vertically */
+        align-items: center; /* Center align cards */
+    }
+
+    .project-card {
+        flex: 1 1 90%; /* Allow cards to take full width */
+        max-width: 90%; /* Limit card width for mobile */
+        margin: 10px 0; /* Add vertical margin */
+    }
+
+    .project-card button {
+        padding: 8px 16px; /* Adjust button padding */
+        font-size: 1rem; /* Reduce button font size */
+    }
+
+    .translate-btn {
+        bottom: 10px; /* Adjust position for mobile */
+        right: 10px; /* Adjust position for mobile */
+    }
+
+    .translate-btn button {
+        padding: 8px 16px; /* Adjust padding */
+        font-size: 0.9rem; /* Adjust font size */
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.8rem; /* Further reduce font size for small screens */
+    }
+
+    header p {
+        font-size: 0.9rem; /* Further reduce font size for small screens */
+    }
+
+    .project-card {
+        padding: 15px; /* Adjust padding for smaller screens */
+    }
+
+    .project-description {
+        font-size: 0.9rem; /* Adjust project description font size */
+    }
+}

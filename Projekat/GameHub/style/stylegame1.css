@@ -1,0 +1,186 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.game-container {
+    width: 100%;
+    height: 100%;
+    background-color: #87ceeb; 
+    position: relative;
+}
+
+.character {
+    width: 50px;
+    height: 100px;
+    background-color: #ffcc00; 
+    position: absolute;
+    bottom: 100px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+}
+
+.character-head {
+    width: 30px;
+    height: 30px;
+    background-color: #ffcc00; 
+    border-radius: 50%; 
+    position: absolute;
+    top: -35px; 
+    left: 10px; 
+}
+
+.eye {
+    width: 5px;
+    height: 5px;
+    background-color: black;
+    border-radius: 50%;
+    position: absolute;
+    top: 8px;
+}
+
+.eye.left {
+    left: 7px; 
+}
+
+.eye.right {
+    right: 7px; 
+}
+
+.ground {
+width: 100%;
+height: 50px;
+background-color: green;
+position: absolute;
+bottom: 0;
+display: flex; /* Koristi flex za centriranje teksta */
+align-items: center; /* Vertikalno centriranje */
+justify-content: center; /* Horizontalno centriranje */
+color: white; /* Boja teksta */
+font-size: 16px; /* Veličina fonta */
+}
+
+
+.lightsaber {
+    width: 10px;
+    height: 140px;
+    background: linear-gradient(to bottom, red 0%, red 80%, black 80%, black 100%); 
+    position: absolute;
+    top: -90px;
+    right: -2px; 
+    transform-origin: 0 100%; 
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.7); 
+}
+
+.arm {
+    width: 10px;
+    height: 50px;
+    background-color: #ffcc00;
+    position: absolute;
+    top: 20px;
+}
+
+.arm.left {
+    left: -15px;
+}
+
+.arm.right {
+    right: -15px;
+}
+
+.leg {
+    width: 10px;
+    height: 50px;
+    background-color: #ffcc00;
+    position: absolute;
+    bottom: -50px;
+}
+
+.leg.left {
+    left: 0px; 
+}
+
+.leg.right {
+    right: 0px; 
+}
+
+.start-button {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px 20px;
+    font-size: 20px;
+    background-color: #ffcc00;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10; 
+}
+
+.mushroom {
+width: 30px;
+height: 30px;
+background-color: red; /* Crvena boja za osnovu pečurke */
+border-radius: 50%; /* Oblik pečurke */
+position: absolute;
+display: flex; /* Za centriranje tačkica */
+justify-content: center;
+align-items: center;
+}
+
+.mushroom::before,
+.mushroom::after {
+content: '';
+width: 5px; /* Veličina bele tačkice */
+height: 5px;
+background-color: white; /* Bela boja za tačkice */
+border-radius: 50%;
+position: absolute;
+}
+
+.mushroom::before {
+top: 5px;
+left: 8px;
+}
+
+.mushroom::after {
+bottom: 5px;
+right: 8px;
+}
+
+
+.game-over {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 30px;
+    color: red;
+    z-index: 10; 
+    display: none; 
+}
+
+.score {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 20px;
+    color: black;
+    z-index: 10; 
+}
+.menu-button {
+position: absolute;
+top: 40%; /* Pomeranje ispod dugmeta "Pokreni igru" */
+left: 50%;
+transform: translate(-50%, -50%);
+padding: 10px 20px;
+font-size: 20px;
+background-color: #ffcc00; /* Isti stil */
+border: none;
+border-radius: 5px;
+cursor: pointer;
+z-index: 10; 
+}
