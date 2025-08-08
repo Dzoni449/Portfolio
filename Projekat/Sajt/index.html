@@ -1,0 +1,459 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Website</title>
+  <link rel="stylesheet" href="style.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+
+  <style>
+    #chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10001;
+    }
+
+    #chat-icon {
+      background: #3B1E54;
+      color: white;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    #chat-window {
+      display: none;
+      flex-direction: column;
+      background: #fff;
+      border-radius: 12px;
+      width: 320px;
+      height: 450px; /* default for desktop */
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    #chat-window.open {
+      display: flex;
+    }
+
+    /* Height for mobile devices */
+    @media (max-width: 600px) {
+      #chat-window {
+        width: 90%;
+        height: 30vh;
+      }
+    }
+
+    #chat-header {
+      background: #3B1E54;
+      color: #fff;
+      padding: 12px 15px;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    #chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      background: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #chat-input {
+      padding: 10px;
+      border: none;
+      border-top: 1px solid #ccc;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  </style>
+
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="navbar-container">
+      <a href="index.html" class="navbar-brand">
+        <img src="images/proba2.png" alt="Logo" />
+      </a>
+      <div class="burger" id="burger">
+        <i class="fas fa-bars"></i>
+      </div>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="o-nama.html">About Us</a></li>
+        <li class="dropdown-parent">
+          <a href="usluge.html">Services <i class="fa-solid fa-arrow-down"></i></a>
+          <ul class="dropdown">
+            <li><a href="website-development.html">Website Development</a></li>
+            <li><a href="ecommerce-development.html">E-commerce Development</a></li>
+            <li><a href="website-maintenance.html">Website Maintenance</a></li>
+            <li><a href="website-design.html">Website Design</a></li>
+          </ul>
+        </li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="kontakt.html" class="btn-contact">Contact Us</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="fade-in">Elevate Your Brand <br> with Our Creative Agency</h1>
+      <p class="fade-in">
+        Our team specializes in web design and development, user interface and user experience design, graphic design,<br>
+        and Google Ads management to help your business stand out in today’s competitive market.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="o-nama.html" class="hero-btn" style="text-decoration:none; color:inherit;">
+          About Us <span class="btn-arrow">↗</span>
+        </a>
+        <a href="usluge.html" class="hero-btn" style="text-decoration:none; color:inherit;">
+          Services <span class="btn-arrow">↗</span>
+        </a>
+        <a href="kontakt.html" class="hero-btn" style="text-decoration:none; color:inherit;">
+          Contact Us <span class="btn-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="about fade-in">
+    <div class="about-container">
+      <p>About Us</p>
+      <h1>A place where future brands are born.</h1>
+      <div class="about-content">
+        <div class="about-image slide-in-left" id="row">
+          <img src="images/onama.jpg" alt="About Us" />
+        </div>
+        <div class="about-text" id="row">
+          <p class="fade-in">
+            YOUR COMPANY is a creative agency based in Niš, dedicated to providing comprehensive digital solutions that empower your brand in today’s market. Our team of experts specializes in website development, graphic design, search engine optimization (SEO), Google Ads management, and social media marketing.
+            <br><br>
+            We believe that a high-quality website is not just a digital business card, but a key tool for achieving business goals. Our mission is to help clients stand out and succeed in their business through innovative and functional solutions.
+            <br><br>
+            We take pride in our commitment to clients, offering 24/7 support and adapting to their specific needs. Our approach is based on thorough information gathering, planning, design, development, testing, and website maintenance to ensure every project is successful and aligned with the client’s goals.
+          </p>
+        </div>
+        <!-- Features list and contact button -->
+        <div class="features">
+          <ul>
+            <li><i class="fa-solid fa-circle-check fade-in"></i> High-Quality Services</li>
+            <li><i class="fa-solid fa-circle-check fade-in"></i> Creative Design</li>
+            <li><i class="fa-solid fa-circle-check fade-in"></i> Professional Team</li>
+            <li><i class="fa-solid fa-circle-check fade-in"></i> Fast Delivery</li>
+            <li><i class="fa-solid fa-circle-check fade-in"></i> Client Support</li>
+            <li><i class="fa-solid fa-circle-check fade-in"></i> Affordable Prices</li>
+          </ul>
+          <a href="contact.html" class="contact-btn" style="text-decoration:none; color:inherit;">
+            Contact Us <span class="btn-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="new-section fade-in">
+  <div class="section-header">
+    <p style="font-weight: bolder;">Our Services</p>
+    <h1 style="color: black; font-weight: bolder;">Services That Make Us Stand Out</h1>
+  </div>
+  <div class="boxes-container">
+    <a href="website-development.html" class="box zoom-in" style="text-decoration: none; color: inherit;">
+      <h3>Website Development <i class="fas fa-arrow-circle-right" style="font-size: 20px; margin-left: 10px;"></i></h3>
+      <p class="gray-text">Custom-built websites designed for performance, responsiveness, and user engagement.</p>
+      <img src="images/1.jpg" alt="Website Development" />
+    </a>
+
+    <a href="ecommerce-development.html" class="box zoom-in" style="text-decoration: none; color: inherit;">
+      <h3>E-commerce Solutions <i class="fas fa-arrow-circle-right" style="font-size: 20px; margin-left: 10px;"></i></h3>
+      <p class="gray-text">Robust online stores with seamless shopping experiences and secure payment gateways.</p>
+      <img src="images/2.jpg" alt="E-commerce Solutions" />
+    </a>
+
+    <a href="website-maintenance.html" class="box zoom-in" style="text-decoration: none; color: inherit;">
+      <h3>Website Maintenance <i class="fas fa-arrow-circle-right" style="font-size: 20px; margin-left: 10px;"></i></h3>
+      <p class="gray-text">Reliable support to keep your website updated, secure, and running smoothly 24/7.</p>
+      <img src="images/3.jpg" alt="Website Maintenance" />
+    </a>
+
+    <a href="website-design.html" class="box zoom-in" style="text-decoration: none; color: inherit;">
+      <h3>Website Design <i class="fas fa-arrow-circle-right" style="font-size: 20px; margin-left: 10px;"></i></h3>
+      <p class="gray-text">Creative and modern designs tailored to your brand identity and business goals.</p>
+      <img src="images/3.jpg" alt="Website Design" />
+    </a>
+
+    <a href="blog-seo-tips.html" class="box zoom-in" style="text-decoration: none; color: inherit;">
+      <h3>SEO Optimization <i class="fas fa-arrow-circle-right" style="font-size: 20px; margin-left: 10px;"></i></h3>
+      <p class="gray-text">Boost your website’s visibility and rank higher on search engines to attract more visitors.</p>
+      <img src="images/4.jpg" alt="SEO Optimization" />
+    </a>
+
+    <a href="blog-third.html" class="box zoom-in" style="text-decoration: none; color: inherit;">
+      <h3>Google Ads Management <i class="fas fa-arrow-circle-right" style="font-size: 20px; margin-left: 10px;"></i></h3>
+      <p class="gray-text">Effective ad campaigns that increase traffic and maximize ROI for your business.</p>
+      <img src="images/5.jpg" alt="Google Ads Management" />
+    </a>
+  </div>
+</section>
+
+
+
+  <section class="why-us-section fade-in">
+    <div class="section-header">
+      <p>Why Choose Us</p>
+      <h1>Why Our Clients Trust Us</h1>
+    </div>
+
+    <div class="boxes-container">
+      <div class="box zoom-in">
+        <i class="fas fa-star"></i>
+        <h3>High Quality</h3>
+        <p>We deliver premium quality in every project, ensuring top-notch results for our clients.</p>
+      </div>
+
+      <div class="box zoom-in">
+        <i class="fas fa-clock"></i>
+        <h3>On-Time Delivery</h3>
+        <p>Our team values deadlines and guarantees that your project will be delivered on time, every time.</p>
+      </div>
+
+      <div class="box zoom-in">
+        <i class="fas fa-handshake"></i>
+        <h3>Trusted Partnership</h3>
+        <p>We build long-term relationships based on trust, transparency, and open communication.</p>
+      </div>
+
+      <div class="box zoom-in">
+        <i class="fas fa-users"></i>
+        <h3>Expert Team</h3>
+        <p>Our team of professionals is skilled, creative, and committed to your success.</p>
+      </div>
+
+      <div class="box zoom-in">
+        <i class="fas fa-lightbulb"></i>
+        <h3>Innovative Solutions</h3>
+        <p>We provide innovative solutions tailored to your unique business needs.</p>
+      </div>
+
+      <div class="box zoom-in">
+        <i class="fas fa-thumbs-up"></i>
+        <h3>Client Satisfaction</h3>
+        <p>Your satisfaction is our priority – we go above and beyond to exceed your expectations.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="did-you-know-section fade-in">
+    <div class="section-header">
+      <p>Did You Know?</p>
+      <h1>You can contact us 24/7 – we’re always here to help!</h1>
+    </div>
+
+    <div class="boxes-container">
+      <div class="box zoom-in">
+        <i class="fas fa-comments"></i>
+        <h3>Live Chat</h3>
+        <p>Our live bot and agents are ready to assist you instantly.</p>
+      </div>
+
+      <div class="box zoom-in">
+        <i class="fas fa-clock"></i>
+        <h3>24/7 Support</h3>
+        <p>No matter the time, we’re here to answer your questions.</p>
+      </div>
+
+      <div class="box zoom-in">
+        <i class="fas fa-bolt"></i>
+        <h3>Fast Response</h3>
+        <p>We respond to inquiries quickly, ensuring you get what you need right away.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-column">
+        <h3>About Us</h3>
+        <p>We’re dedicated to providing the best service 24/7 with fast support and helpful live chat.</p>
+      </div>
+
+      <div class="footer-column">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="o-nama.html">About Us</a></li>
+          <li><a href="usluge.html">Services</a></li>
+          <li><a href="kontakt.html">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h3>Contact Info</h3>
+        <p><i class="fas fa-phone"></i> +123 456 7890</p>
+        <p><i class="fas fa-envelope"></i> support@example.com</p>
+        <p><i class="fas fa-map-marker-alt"></i> 123 Main St, City, Country</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 NS. All rights reserved.</p>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <div id="chatbot">
+    <div id="chat-icon" onclick="toggleChatWindow()">
+      <i class="fas fa-comment"></i>
+    </div>
+
+    <div id="chat-window">
+      <div id="chat-header">
+        Chat Support
+        <span onclick="toggleChatWindow()" style="float:right; cursor:pointer;">&times;</span>
+      </div>
+      <div id="chat-messages"></div>
+      <input id="chat-input" type="text" placeholder="Your message..." />
+    </div>
+  </div>
+
+<script>
+  const burger = document.getElementById('burger');
+  const navLinks = document.getElementById('nav-links');
+  const dropdownParent = document.querySelector('.dropdown-parent');
+
+  // Create background layer for burger menu
+  const navBackground = document.createElement("div");
+  navBackground.className = "nav-background";
+  document.body.appendChild(navBackground);
+
+  // Toggle main menu + background
+  burger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    navBackground.classList.toggle('active');
+  });
+
+  // Dropdown toggle on mobile devices
+  dropdownParent.querySelector('a').addEventListener('click', (e) => {
+    if (window.innerWidth <= 768) {
+      const hasDropdown = dropdownParent.querySelector('.dropdown');
+      const linkHref = dropdownParent.querySelector('a').getAttribute('href');
+
+      // If href exists and is NOT "#" — allow link to work
+      if (linkHref && linkHref !== "#") {
+        return;
+      }
+
+      // Otherwise: toggle dropdown
+      e.preventDefault();
+      dropdownParent.classList.toggle('active');
+    }
+  });
+
+  // Smooth fade/slide/zoom effects on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.fade-in, .slide-in-left, .zoom-in').forEach(el => {
+    observer.observe(el);
+  });
+
+  const dropdownLink = document.querySelector('.dropdown-parent > a');
+  if (window.innerWidth <= 768) {
+    dropdownLink.setAttribute('href', 'services.html');
+  }
+
+  let chatSession = [];
+  fetchChat();
+
+  setInterval(fetchChat, 3000);
+  const input = document.getElementById("chat-input");
+  const messagesDiv = document.getElementById("chat-messages");
+  function renderMessages() {
+  messagesDiv.innerHTML = chatSession.map(row => {
+    let html = `<div class='chat-bubble user-bubble'><strong>user:</strong> ${row.message}</div>`;
+    if (row.reply) html += `<div class='chat-bubble bot-bubble'><strong>support:</strong> ${row.reply}</div>`;
+    return html;
+  }).join("");
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
+  }
+  input.addEventListener("keypress", function(e) {
+    if (e.key === "Enter" && this.value.trim()) {
+      const msg = this.value.trim();
+      this.value = "";
+      fetch("chatbot.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "message=" + encodeURIComponent(msg)
+      })
+      .then(() => {
+        chatSession.push({ message: msg });
+        renderMessages();
+      });
+    }
+  });
+  function toggleChatWindow() {
+    const win = document.getElementById('chat-window');
+    const icon = document.getElementById('chat-icon');
+    
+    win.classList.toggle('open');
+
+    if (win.classList.contains('open')) {
+      icon.style.display = 'none';
+    } else {
+      icon.style.display = 'flex';
+    }
+  }
+
+  document.addEventListener('click', function(e) {
+    const chat = document.getElementById('chatbot');
+    const chatWin = document.getElementById('chat-window');
+    const icon = document.getElementById('chat-icon');
+
+    // Close chat window and show icon if clicked outside chat
+    if (!chat.contains(e.target) && chatWin.classList.contains('open')) {
+      chatWin.classList.remove('open');
+      icon.style.display = 'flex';
+    }
+  });
+
+  function fetchChat() {
+    fetch("chat_fetch.php")
+      .then(res => res.json())
+      .then(data => {
+        chatSession = data;  // Update local session
+        renderMessages();    // Show messages
+      });
+  }
+</script>
+
+</body>
+</html>

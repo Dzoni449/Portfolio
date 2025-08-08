@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Website</title>
+  <link rel="stylesheet" href="style.css" />
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <nav class="navbar">
+  <div class="navbar-container">
+    <a href="#" class="navbar-brand">
+      <img src="images/proba2.png" alt="Logo">
+    </a>
+    <div class="burger" id="burger">
+      <i class="fas fa-bars"></i>
+    </div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="o-nama.html">About Us</a></li>
+      <li class="dropdown-parent">
+        <a href="usluge.html">Services <i class="fa-solid fa-arrow-down"></i></a>
+        <ul class="dropdown">
+          <li><a href="website-development.html">Website Development</a></li>
+          <li><a href="ecommerce-development.html">E-commerce Development</a></li>
+          <li><a href="website-maintenance.html">Website Maintenance</a></li>
+          <li><a href="website-design.html">Website Design</a></li>
+        </ul>
+      </li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="kontakt.html" class="btn-contact">Contact Us</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero" style="height: 60vh; background: url('images/contant.png') center/cover no-repeat;">
+  <div class="hero-content">
+    <h1 class="fade-in"></h1>
+    <p class="fade-in"></p>
+  </div>
+</section>
+
+<section class="new-section fade-in">
+  <div class="section-header">
+    <p style="font-weight: bold;">Have an Idea?</p>
+    <h1>Send Us a Message</h1>
+  </div>
+  <div class="boxes-container">
+    <div class="box zoom-in">
+      <i class="fas fa-envelope" style="font-size: 30px;"></i>
+      <h3>Email</h3>
+      <p>info@example.com</p>
+    </div>
+    <div class="box zoom-in">
+      <i class="fas fa-phone-alt" style="font-size: 30px;"></i>
+      <h3>Phone</h3>
+      <p>+381 60 123 4567</p>
+    </div>
+    <div class="box zoom-in">
+      <i class="fas fa-map-marker-alt" style="font-size: 30px;"></i>
+      <h3>Address</h3>
+      <p>Bulevar Nemanjića 12, Niš</p>
+    </div>
+  </div>
+  <form id="contact-form" onsubmit="return sendContact(event)" style="max-width: 600px; margin: 40px auto 0; display: flex; flex-direction: column; gap: 15px;">
+    <input type="text" id="name" placeholder="Your Name" required style="padding: 12px; border-radius: 10px; border: 1px solid #ccc;">
+    <input type="email" id="email" placeholder="Email Address" required style="padding: 12px; border-radius: 10px; border: 1px solid #ccc;">
+    <textarea id="message" rows="5" placeholder="Your Message" required style="padding: 12px; border-radius: 10px; border: 1px solid #ccc;"></textarea>
+    <button class="contact-btn" type="submit">Send Message <span class="btn-arrow">↗</span></button>
+  </form>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-column">
+      <h3>About Us</h3>
+      <p>We’re dedicated to providing the best service 24/7 with fast support and helpful live chat.</p>
+    </div>
+
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="o-nama.html">About</a></li>
+        <li><a href="usluge.html">Services</a></li>
+        <li><a href="kontakt.html">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h3>Contact Info</h3>
+      <p><i class="fas fa-phone"></i> +123 456 7890</p>
+      <p><i class="fas fa-envelope"></i> support@example.com</p>
+      <p><i class="fas fa-map-marker-alt"></i> 123 Main St, City, Country</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© NS. All rights reserved.</p>
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const burger = document.getElementById('burger');
+  const navLinks = document.getElementById('nav-links');
+  const dropdownParent = document.querySelector('.dropdown-parent');
+
+  // Create background layer for burger menu
+  const navBackground = document.createElement("div");
+  navBackground.className = "nav-background";
+  document.body.appendChild(navBackground);
+
+  // Toggle main menu + background
+  burger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    navBackground.classList.toggle('active');
+  });
+
+  // Dropdown toggle on mobile devices
+  dropdownParent.querySelector('a').addEventListener('click', (e) => {
+    if (window.innerWidth <= 768) {
+      const hasDropdown = dropdownParent.querySelector('.dropdown');
+      const linkHref = dropdownParent.querySelector('a').getAttribute('href');
+
+      // If href exists and is NOT just "#" — allow link to work
+      if (linkHref && linkHref !== "#") {
+        return;
+      }
+
+      // Otherwise: toggle dropdown
+      e.preventDefault();
+      dropdownParent.classList.toggle('active');
+    }
+  });
+
+  // Smooth fade/slide/zoom effects on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.fade-in, .slide-in-left, .zoom-in').forEach(el => {
+    observer.observe(el);
+  });
+
+  function sendContact(e) {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const message = document.getElementById("message").value.trim();
+
+    if (!name || !email || !message) {
+      alert("Please fill in all fields.");
+      return false;
+    }
+
+    const formData = new URLSearchParams();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("message", message);
+
+    fetch("contact_submit.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: formData
+    })
+    .then(res => res.ok ? res.text() : Promise.reject(res.status))
+    .then(() => {
+      alert("Your message has been sent successfully!");
+      document.getElementById("contact-form").reset();
+    })
+    .catch(() => alert("There was an error sending your message. Please try again."));
+
+    return false;
+  }
+</script>
+
+</body>
+</html>

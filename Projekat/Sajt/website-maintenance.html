@@ -1,0 +1,138 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Website</title>
+  <link rel="stylesheet" href="style.css" />
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <nav class="navbar">
+  <div class="navbar-container">
+    <a href="#" class="navbar-brand">
+      <img src="images/proba2.png" alt="Logo">
+    </a>
+    <div class="burger" id="burger">
+    <i class="fas fa-bars"></i>
+    </div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="o-nama.html">About Us</a></li>
+      <li class="dropdown-parent">
+      <a href="usluge.html">Services <i class="fa-solid fa-arrow-down"></i></a>
+      <ul class="dropdown">
+        <li><a href="website-development.html">Website Development</a></li>
+        <li><a href="ecommerce-development.html">E-commerce Development</a></li>
+        <li><a href="website-maintenance.html">Website Maintenance</a></li>
+        <li><a href="website-design.html">Website Design</a></li>
+      </ul>
+    </li>
+
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="kontakt.html" class="btn-contact">Contact Us</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero" style="height: 60vh; background: url('images/web\ maitenance/bg1.jpg') center/cover no-repeat;">
+  <div class="hero-content">
+    <h1 class="fade-in">Website Maintenance</h1>
+    <p class="fade-in">Security, speed, and constant availability of your website.</p>
+  </div>
+</section>
+
+<section class="why-us-section fade-in">
+  <div class="section-header">
+    <p>Why is it important?</p>
+    <h1>Benefits of Website Maintenance</h1>
+  </div>
+  <div class="boxes-container">
+    <div class="box zoom-in"><i class="fas fa-shield-alt"></i><h3>Security</h3><p>Protection against attacks and malware.</p></div>
+    <div class="box zoom-in"><i class="fas fa-tachometer-alt"></i><h3>Speed</h3><p>Always optimized content.</p></div>
+    <div class="box zoom-in"><i class="fas fa-sync-alt"></i><h3>Updates</h3><p>Regular updates and backups.</p></div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-column">
+      <h3>About Us</h3>
+      <p>We’re dedicated to providing the best service 24/7 with fast support and helpful live chat.</p>
+    </div>
+
+    <div class="footer-column">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="o-nama.html">About</a></li>
+        <li><a href="usluge.html">Services</a></li>
+        <li><a href="kontakt.html">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-column">
+      <h3>Contact Info</h3>
+      <p><i class="fas fa-phone"></i> +123 456 7890</p>
+      <p><i class="fas fa-envelope"></i> support@example.com</p>
+      <p><i class="fas fa-map-marker-alt"></i> 123 Main St, City, Country</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>© NS. All rights reserved.</p>
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const burger = document.getElementById('burger');
+  const navLinks = document.getElementById('nav-links');
+  const dropdownParent = document.querySelector('.dropdown-parent');
+
+  const navBackground = document.createElement("div");
+  navBackground.className = "nav-background";
+  document.body.appendChild(navBackground);
+
+  burger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    navBackground.classList.toggle('active');
+  });
+
+  dropdownParent.querySelector('a').addEventListener('click', (e) => {
+    if (window.innerWidth <= 768) {
+      const hasDropdown = dropdownParent.querySelector('.dropdown');
+      const linkHref = dropdownParent.querySelector('a').getAttribute('href');
+
+      if (linkHref && linkHref !== "#") {
+        return;
+      }
+
+      e.preventDefault();
+      dropdownParent.classList.toggle('active');
+    }
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.fade-in, .slide-in-left, .zoom-in').forEach(el => {
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
