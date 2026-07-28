@@ -1,14 +1,10 @@
 'use strict';
 
-/* ═══════════════════════════════════════════════════════════
-   Ledger — app.js
-   Vanilla JS expense tracker with Chart.js and localStorage.
-   Single-class app pattern, no framework, no build step.
-   ═══════════════════════════════════════════════════════════ */
+
 
 const LS_KEY = 'ledger.expenses.v1';
 
-/* ── Category → color mapping (monochromatic moss) ────────── */
+
 const CATEGORIES = {
   'Groceries':     { color: '#1e4a2f' },
   'Rent & Bills':  { color: '#2b5a3d' },
@@ -20,7 +16,7 @@ const CATEGORIES = {
   'Other':         { color: '#c2d5c9' },
 };
 
-/* ── Formatters ─────────────────────────────────────────── */
+
 const eurFmt = new Intl.NumberFormat('en-GB', {
   minimumFractionDigits: 2,
   maximumFractionDigits: 2,
@@ -37,13 +33,13 @@ const monthFmt = new Intl.DateTimeFormat('en-GB', {
   year:  'numeric',
 });
 
-/* Splits a formatted number into main + cents parts */
+
 function splitAmount(n) {
   const [main, cents] = eurFmt.format(n).split('.');
   return { main: main.replace(',', ','), cents: '.' + cents };
 }
 
-/* ── Sample seed data — first-time visitors see a populated app */
+
 function seedData() {
   const now = new Date();
   const daysAgo = d => {
@@ -74,9 +70,7 @@ function seedData() {
   }));
 }
 
-/* ═══════════════════════════════════════════════════════════
-   LEDGER APP CLASS
-   ═══════════════════════════════════════════════════════════ */
+
 class Ledger {
 
   constructor() {
@@ -90,7 +84,7 @@ class Ledger {
     this.render();
   }
 
-  /* ── DOM cache ───────────────────────────────────────── */
+
   cacheDom() {
     const $ = sel => document.querySelector(sel);
     const $$ = sel => document.querySelectorAll(sel);
@@ -127,7 +121,7 @@ class Ledger {
     };
   }
 
-  /* ── Persistence ─────────────────────────────────────── */
+ 
   load() {
     try {
       const raw = localStorage.getItem(LS_KEY);
@@ -146,15 +140,15 @@ class Ledger {
     catch (e) { console.warn('[ledger] save failed:', e); }
   }
 
-  /* ── Events ──────────────────────────────────────────── */
+
   bindEvents() {
     // Default date = today
     this.$.date.value = new Date().toISOString().split('T')[0];
 
-    // Form submit
+    
     this.$.form.addEventListener('submit', e => this.handleAdd(e));
 
-    // Filter tabs
+   
     this.$.filterTabs.forEach(tab => {
       tab.addEventListener('click', () => {
         this.$.filterTabs.forEach(t => {
@@ -168,7 +162,7 @@ class Ledger {
       });
     });
 
-    // Reset
+    
     this.$.resetBtn.addEventListener('click', () => {
       if (confirm('Clear all expenses? This cannot be undone.')) {
         this.state.expenses = [];
@@ -178,7 +172,7 @@ class Ledger {
     });
   }
 
-  /* ── Actions ─────────────────────────────────────────── */
+
   handleAdd(e) {
     e.preventDefault();
     this.$.formError.classList.remove('show');
@@ -206,7 +200,7 @@ class Ledger {
     this.state.expenses.push(expense);
     this.save();
 
-    // Reset form
+    
     this.$.form.reset();
     this.$.date.value = new Date().toISOString().split('T')[0];
     this.$.amount.focus();
@@ -220,7 +214,7 @@ class Ledger {
     this.render();
   }
 
-  /* ── Derived data ────────────────────────────────────── */
+  
   getFilteredExpenses() {
     const { filter, expenses } = this.state;
     if (filter === 'all') return [...expenses];
@@ -229,7 +223,7 @@ class Ledger {
     const cutoff = new Date();
 
     if (filter === 'month') {
-      // First day of current month
+      
       cutoff.setFullYear(now.getFullYear(), now.getMonth(), 1);
       cutoff.setHours(0, 0, 0, 0);
     } else if (filter === '30days') {
@@ -241,7 +235,7 @@ class Ledger {
   }
 
   getSortedExpenses() {
-    // Sort by date desc, then created desc
+    
     return this.getFilteredExpenses().sort((a, b) => {
       if (a.date !== b.date) return a.date < b.date ? 1 : -1;
       return b.created - a.created;
@@ -252,7 +246,7 @@ class Ledger {
     const total = items.reduce((s, e) => s + e.amount, 0);
     const count = items.length;
 
-    // Distinct days that had expenses
+    
     const days = new Set(items.map(e => e.date)).size;
     const avgPerDay = days > 0 ? total / days : 0;
 
@@ -274,7 +268,7 @@ class Ledger {
   }
 
   computeByDay(items) {
-    // Determine date range
+    
     const range = this.state.filter === 'month' ? this.currentMonthDays() : 30;
     const now = new Date();
     const days = [];
@@ -286,7 +280,7 @@ class Ledger {
       days.push({ date: iso, label: d.getDate(), amount: 0 });
     }
 
-    // Map expenses onto days
+   
     const dayMap = new Map(days.map(d => [d.date, d]));
     items.forEach(e => {
       if (dayMap.has(e.date)) dayMap.get(e.date).amount += e.amount;
@@ -306,9 +300,7 @@ class Ledger {
     return 'Showing all time';
   }
 
-  /* ═══════════════════════════════════════════════════════
-     RENDER
-     ═══════════════════════════════════════════════════════ */
+
   render() {
     const items    = this.getFilteredExpenses();
     const summary  = this.computeSummary(items);
@@ -323,19 +315,19 @@ class Ledger {
   }
 
   renderSummary({ total, count, days, avgPerDay }) {
-    // Total
+    
     const t = splitAmount(total);
     this.$.sumTotalMain.textContent  = t.main;
     this.$.sumTotalCents.textContent = t.cents;
     this.$.sumTotalSub.textContent   = `Across ${count} ${count === 1 ? 'transaction' : 'transactions'}`;
 
-    // Average
+    
     const a = splitAmount(avgPerDay);
     this.$.sumAvgMain.textContent  = a.main;
     this.$.sumAvgCents.textContent = a.cents;
     this.$.sumAvgSub.textContent   = days === 1 ? 'Over one day' : `Over ${days} days`;
 
-    // Count
+    
     this.$.sumCount.textContent    = String(count);
     this.$.sumCountSub.textContent = this.state.filter === 'all'
       ? 'Since first entry'
@@ -561,14 +553,14 @@ class Ledger {
         </div>`;
     }).join('');
 
-    // Bind delete
+    
     this.$.txnList.querySelectorAll('[data-del]').forEach(btn => {
       btn.addEventListener('click', () => this.removeExpense(btn.dataset.del));
     });
   }
 }
 
-/* ── Utility ─────────────────────────────────────────────── */
+
 function escape(s) {
   return String(s)
     .replace(/&/g, '&amp;')
@@ -577,9 +569,9 @@ function escape(s) {
     .replace(/"/g, '&quot;');
 }
 
-/* ── Boot ──────────────────────────────────────────────── */
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Set Chart.js global defaults
+  
   if (typeof Chart !== 'undefined') {
     Chart.defaults.font.family = "'Inter', sans-serif";
     Chart.defaults.color = '#6b675e';
