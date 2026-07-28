@@ -1,38 +1,35 @@
-/* =============================================================
-   Draft — a chat app that thinks before it sends.
-   Lilac + warm cream. Editorial DNA, conversational surface.
-   ============================================================= */
+
 
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,0..100&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  /* Paper */
+
   --paper:    #F7F1E6;
   --paper-2:  #EFE8D8;
   --paper-3:  #E6DDCB;
 
-  /* Ink */
+
   --ink:      #1B1917;
   --ink-soft: #4A4640;
   --ink-mute: #857F74;
   --ink-faint:#B5AEA1;
 
-  /* Plum (Draft signature) */
+ 
   --plum:      #6C5AB8;
   --plum-hi:   #7E6BC7;
   --plum-soft: #A0A6E8;
   --plum-wash: #EBEAF7;
   --plum-bg:   #F0EEFA;
 
-  /* Utility */
+
   --success: #4A9F6A;
   --danger:  #C9412C;
 
-  /* Rules */
+
   --rule:      rgba(27, 25, 23, 0.10);
   --rule-soft: rgba(27, 25, 23, 0.05);
 
-  /* Type */
+
   --f-display: 'Fraunces', 'Times New Roman', Georgia, serif;
   --f-body:    'Inter', -apple-system, sans-serif;
   --f-mono:    'JetBrains Mono', ui-monospace, monospace;
@@ -51,7 +48,7 @@
   }
 }
 
-/* ── Reset ────────────────────────────────────────────────── */
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body { height: 100%; }
@@ -72,7 +69,7 @@ ul, ol { list-style: none; }
 ::selection { background: var(--plum); color: var(--paper); }
 :focus-visible { outline: 2px solid var(--plum); outline-offset: 2px; }
 
-/* ── App shell ─────────────────────────────────────────────── */
+
 .app {
   display: grid;
   grid-template-columns: var(--sidebar-w) 1fr;
@@ -81,9 +78,7 @@ ul, ol { list-style: none; }
   background: var(--paper);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   BACK LINK (fixed, floats over sidebar)
-   ═══════════════════════════════════════════════════════════ */
+
 .back-link {
   position: absolute;
   top: 18px;
@@ -101,9 +96,7 @@ ul, ol { list-style: none; }
 }
 .back-link:hover { color: var(--plum); }
 
-/* ═══════════════════════════════════════════════════════════
-   SIDEBAR
-   ═══════════════════════════════════════════════════════════ */
+
 .sidebar {
   background: var(--paper-2);
   border-right: 1px solid var(--rule);
@@ -322,9 +315,7 @@ ul, ol { list-style: none; }
   color: var(--ink-mute);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   CHAT AREA
-   ═══════════════════════════════════════════════════════════ */
+
 .chat {
   display: flex;
   flex-direction: column;
@@ -333,7 +324,7 @@ ul, ol { list-style: none; }
   position: relative;
 }
 
-/* Placeholder when no conversation selected */
+
 .chat-placeholder {
   display: flex;
   flex-direction: column;
@@ -460,7 +451,7 @@ ul, ol { list-style: none; }
 .messages::-webkit-scrollbar { width: 8px; }
 .messages::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
 
-/* Day separator */
+
 .day-sep {
   align-self: center;
   font-family: var(--f-mono);
@@ -482,7 +473,7 @@ ul, ol { list-style: none; }
   background: var(--rule);
 }
 
-/* Message bubble */
+
 .msg-group {
   display: flex;
   gap: 10px;
@@ -558,7 +549,7 @@ ul, ol { list-style: none; }
   border-bottom-right-radius: 5px;
 }
 
-/* Consecutive messages in same group have rounded corners on same side */
+
 .msg-group:not(.mine) .msg + .msg { border-top-left-radius: 5px; }
 .msg-group.mine .msg + .msg { border-top-right-radius: 5px; }
 
@@ -695,9 +686,7 @@ ul, ol { list-style: none; }
   color: var(--ink-mute);
 }
 
-/* ═══════════════════════════════════════════════════════════
-   RESPONSIVE — mobile: single-panel with slide sidebar
-   ═══════════════════════════════════════════════════════════ */
+
 @media (max-width: 768px) {
   .app { grid-template-columns: 1fr; }
 
