@@ -1,15 +1,11 @@
 'use strict';
 
-/* ═══════════════════════════════════════════════════════════
-   Draft — chat UI
-   React 18 (UMD) + Babel Standalone. localStorage persistence.
-   Single-file front end, no build step, no backend.
-   ═══════════════════════════════════════════════════════════ */
+
 
 const { useState, useEffect, useRef, useMemo, useCallback } = React;
 const LS_KEY = 'draft.conversations.v1';
 
-/* ── User directory (senders) ────────────────────────────── */
+
 const USERS = {
   me:    { name: 'You',   color: '#6C5AB8' },
   marta: { name: 'Marta', color: '#F19B7C' },
@@ -23,7 +19,7 @@ const USERS = {
 
 const initial = (id) => USERS[id]?.name?.[0] || '?';
 
-/* ── Time helpers ────────────────────────────────────────── */
+
 const MIN = 60_000;
 const HR  = 60 * MIN;
 const DAY = 24 * HR;
@@ -66,7 +62,7 @@ function sameDay(a, b) {
   return new Date(a).toDateString() === new Date(b).toDateString();
 }
 
-/* ── Mock seed data — a busy, believable chat history ────── */
+
 function seedConversations() {
   return [
     {
@@ -161,7 +157,7 @@ function seedConversations() {
   ];
 }
 
-/* ── LocalStorage ────────────────────────────────────────── */
+
 function loadConversations() {
   try {
     const raw = localStorage.getItem(LS_KEY);
@@ -179,9 +175,7 @@ function saveConversations(convs) {
   catch (e) { console.warn('[draft] save failed', e); }
 }
 
-/* ═══════════════════════════════════════════════════════════
-   COMPONENTS
-   ═══════════════════════════════════════════════════════════ */
+
 
 const Icon = ({ name, size = 16, className = '' }) => {
   const paths = {
@@ -208,7 +202,7 @@ const Avatar = ({ text, color, online, size = 40, className = '', style = {} }) 
   </div>
 );
 
-/* ── Sidebar ─────────────────────────────────────────────── */
+
 const ConvItem = ({ conv, active, onSelect }) => {
   const last = conv.messages[conv.messages.length - 1];
   const preview = conv.typing && conv.typing.length > 0
@@ -484,9 +478,7 @@ const ChatPlaceholder = () => (
   </div>
 );
 
-/* ═══════════════════════════════════════════════════════════
-   APP
-   ═══════════════════════════════════════════════════════════ */
+
 const App = () => {
   const [conversations, setConversations] = useState(loadConversations);
   const [currentId, setCurrentId] = useState(() => {
