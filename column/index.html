@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Column — a place for tasks</title>
+<meta name="description" content="A small React task manager with dark mode, filters, and localStorage persistence. Part of Issue No. 001.">
+
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23efede7'/%3E%3Ctext x='32' y='46' font-family='Georgia,serif' font-size='38' font-weight='500' fill='%231b3a6f' text-anchor='middle' font-style='italic'%3EC%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<!-- Tailwind Play CDN + config with editorial tokens -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        colors: {
+          paper:      'var(--paper)',
+          'paper-2':  'var(--paper-2)',
+          ink:        'var(--ink)',
+          'ink-soft': 'var(--ink-soft)',
+          'ink-mute': 'var(--ink-muted)',
+          pen:        'var(--pen)',
+          'pen-wash': 'var(--pen-wash)',
+          rule:       'var(--rule)',
+        },
+        fontFamily: {
+          display: ['Fraunces', 'Georgia', 'serif'],
+          sans:    ['Inter Tight', 'system-ui', 'sans-serif'],
+          mono:    ['JetBrains Mono', 'ui-monospace', 'monospace'],
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  /* Design tokens — editorial DNA carried over from the portfolio */
+  :root {
+    --paper:     #efede7;
+    --paper-2:   #f5f3ed;
+    --ink:       #171614;
+    --ink-soft:  #3d3a35;
+    --ink-muted: #78736a;
+    --pen:       #1b3a6f;
+    --pen-wash:  rgba(27, 58, 111, 0.08);
+    --rule:      rgba(23, 22, 20, 0.12);
+  }
+
+  .dark {
+    --paper:     #131211;
+    --paper-2:   #1c1a17;
+    --ink:       #efede7;
+    --ink-soft:  #d5d1c7;
+    --ink-muted: #928d83;
+    --pen:       #92adde;
+    --pen-wash:  rgba(146, 173, 222, 0.10);
+    --rule:      rgba(239, 237, 231, 0.10);
+  }
+
+  html, body { background: var(--paper); }
+  body {
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    /* Subtle paper grain — matches the portfolio */
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(23,22,20,0.018) 1px, transparent 1.4px),
+      radial-gradient(circle at 78% 68%, rgba(23,22,20,0.014) 1px, transparent 1.4px);
+    background-size: 220px 220px, 340px 340px;
+  }
+  .dark body {
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(239,237,231,0.014) 1px, transparent 1.4px),
+      radial-gradient(circle at 78% 68%, rgba(239,237,231,0.010) 1px, transparent 1.4px);
+  }
+
+  ::selection { background: var(--pen); color: var(--paper); }
+  :focus-visible { outline: 2px solid var(--pen); outline-offset: 2px; border-radius: 4px; }
+
+  /* Fraunces variable settings */
+  .display-h { font-variation-settings: 'opsz' 96, 'SOFT' 60; }
+  .display-b { font-variation-settings: 'opsz' 24, 'SOFT' 40; }
+  .display-i { font-variation-settings: 'opsz' 24, 'SOFT' 80; }
+
+  /* Task fade-in on mount */
+  @keyframes task-in {
+    from { opacity: 0; transform: translateY(-4px); max-height: 0; }
+    to   { opacity: 1; transform: translateY(0);    max-height: 200px; }
+  }
+  .task-enter { animation: task-in 0.28s cubic-bezier(0.2, 0.65, 0.15, 1) both; }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .fade-in { animation: fade-in 0.3s ease-out both; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
+  /* Hide Tailwind Play CDN production warning */
+  #__tailwind-config__ + div { display: none !important; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div id="root"></div>
+
+<!-- React 18 (production) + Babel standalone for in-browser JSX. Slower first paint, but keeps the source readable. -->
+<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel">
+'use strict';
+
+const { useState, useEffect, useRef, useMemo } = React;
+
+/* ── LocalStorage helpers ───────────────────────────────── */
+const LS_TASKS = 'column.tasks.v1';
+const LS_DARK  = 'column.dark';
+
+const loadTasks = () => {
+  try {
+    const raw = localStorage.getItem(LS_TASKS);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+};
+
+const loadDark = () => {
+  const saved = localStorage.getItem(LS_DARK);
+  if (saved !== null) return saved === 'true';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches;
+};
+
+/* ── Icons (inline SVG so no icon lib needed) ───────────── */
+const Icon = ({ name, size = 16, className = '' }) => {
+  const paths = {
+    plus:      <path d="M12 5v14M5 12h14" />,
+    check:     <polyline points="20 6 9 17 4 12" />,
+    edit:      <><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z" /></>,
+    trash:     <><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6" /><path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2" /></>,
+    sun:       <><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></>,
+    moon:      <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />,
+    arrowLeft: <><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12 19 5 12 12 5" /></>,
+  };
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      {paths[name]}
+    </svg>
+  );
+};
+
+/* ── Back-to-portfolio link ─────────────────────────────── */
+const BackLink = () => (
+  <div className="mb-8">
+    <a href="../../index.html#work"
+       className="inline-flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-ink-mute hover:text-pen transition-colors">
+      <Icon name="arrowLeft" size={14} />
+      Back to Issue No. 001
+    </a>
+  </div>
+);
+
+/* ── Header (logo + dark toggle) ────────────────────────── */
+const Header = ({ dark, onToggle }) => (
+  <header className="flex items-end justify-between mb-8 pb-6 border-b border-rule">
+    <div>
+      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-pen mb-2">
+        <span className="inline-block w-4 h-px bg-pen align-middle mr-2" />
+        Feature 01 · Live
+      </p>
+      <h1 className="font-display text-[2.4rem] leading-none tracking-tight text-ink display-h">
+        <em className="italic font-normal text-pen display-i">Column</em>
+        <span className="font-normal">.</span>
+      </h1>
+      <p className="mt-3 font-display italic text-ink-soft text-[15px] display-b">
+        A small place for the tasks you keep meaning to do.
+      </p>
+    </div>
+    <button onClick={onToggle}
+      className="shrink-0 h-10 w-10 rounded-md border border-rule flex items-center justify-center text-ink-mute hover:text-pen hover:border-pen hover:bg-pen-wash transition-colors"
+      aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}>
+      <Icon name={dark ? 'sun' : 'moon'} size={17} />
+    </button>
+  </header>
+);
+
+/* ── Task input ─────────────────────────────────────────── */
+const TaskInput = ({ onAdd }) => {
+  const [text, setText] = useState('');
+
+  const submit = () => {
+    const t = text.trim();
+    if (!t) return;
+    onAdd(t);
+    setText('');
+  };
+
+  return (
+    <div className="relative mb-4">
+      <input
+        type="text"
+        value={text}
+        onChange={e => setText(e.target.value)}
+        onKeyDown={e => e.key === 'Enter' && submit()}
+        placeholder="File a new task…"
+        maxLength={280}
+        className="w-full px-5 py-4 pr-14 rounded-lg border border-rule bg-paper-2 text-ink text-[15px] placeholder:text-ink-mute placeholder:italic focus:outline-none focus:border-pen focus:ring-2 focus:ring-pen/15 transition"
+      />
+      <button
+        onClick={submit}
+        disabled={!text.trim()}
+        aria-label="Add task"
+        className="absolute right-2 top-1/2 -translate-y-1/2 h-10 w-10 rounded-md flex items-center justify-center text-pen hover:bg-pen-wash disabled:opacity-25 disabled:hover:bg-transparent disabled:cursor-not-allowed transition"
+      >
+        <Icon name="plus" size={18} />
+      </button>
+    </div>
+  );
+};
+
+/* ── Filter tabs ────────────────────────────────────────── */
+const FilterTabs = ({ current, onChange, stats }) => {
+  const tabs = [
+    { id: 'all',       label: 'All',    count: stats.total },
+    { id: 'active',    label: 'Active', count: stats.active },
+    { id: 'completed', label: 'Done',   count: stats.completed },
+  ];
+  return (
+    <div className="flex items-center gap-1 mb-2 border-b border-rule">
+      {tabs.map(tab => {
+        const active = current === tab.id;
+        return (
+          <button
+            key={tab.id}
+            onClick={() => onChange(tab.id)}
+            className={`relative px-4 py-3 text-[13px] font-mono tracking-wide transition-colors flex items-center gap-1.5 ${
+              active ? 'text-pen' : 'text-ink-mute hover:text-ink'
+            }`}
+          >
+            {tab.label}
+            <span className={`text-[10px] px-1.5 py-0.5 rounded ${
+              active ? 'bg-pen-wash text-pen' : 'bg-transparent text-ink-mute'
+            }`}>
+              {tab.count}
+            </span>
+            {active && <span className="absolute left-3 right-3 -bottom-px h-0.5 bg-pen" />}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+/* ── Individual task item ───────────────────────────────── */
+const TaskItem = ({ task, onUpdate, onRemove }) => {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft]     = useState(task.text);
+  const inputRef              = useRef(null);
+
+  useEffect(() => {
+    if (editing) {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    }
+  }, [editing]);
+
+  const saveEdit = () => {
+    const t = draft.trim();
+    if (!t)               { onRemove(task.id); return; }
+    if (t !== task.text)  onUpdate(task.id, { text: t });
+    setEditing(false);
+  };
+
+  const cancelEdit = () => {
+    setDraft(task.text);
+    setEditing(false);
+  };
+
+  return (
+    <div className={`group flex items-center gap-4 py-4 border-b border-rule task-enter transition-opacity ${task.done ? 'opacity-50' : ''}`}>
+      <button
+        onClick={() => onUpdate(task.id, { done: !task.done })}
+        aria-label={task.done ? 'Mark as active' : 'Mark as done'}
+        aria-pressed={task.done}
+        className={`shrink-0 w-[22px] h-[22px] rounded-full border flex items-center justify-center transition ${
+          task.done
+            ? 'bg-pen border-pen text-paper'
+            : 'border-ink-mute hover:border-pen hover:bg-pen-wash'
+        }`}
+      >
+        {task.done && <Icon name="check" size={13} />}
+      </button>
+
+      {editing ? (
+        <input
+          ref={inputRef}
+          type="text"
+          value={draft}
+          onChange={e => setDraft(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === 'Enter')  saveEdit();
+            if (e.key === 'Escape') cancelEdit();
+          }}
+          onBlur={saveEdit}
+          maxLength={280}
+          className="flex-1 min-w-0 bg-transparent border-b border-pen focus:outline-none text-ink text-[15px] py-1"
+        />
+      ) : (
+        <span
+          onDoubleClick={() => setEditing(true)}
+          className={`flex-1 min-w-0 text-ink text-[15px] break-words cursor-text ${task.done ? 'line-through' : ''}`}
+        >
+          {task.text}
+        </span>
+      )}
+
+      <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+        <button
+          onClick={() => setEditing(true)}
+          aria-label="Edit task"
+          className="h-8 w-8 rounded flex items-center justify-center text-ink-mute hover:text-pen hover:bg-pen-wash transition-colors"
+        >
+          <Icon name="edit" size={14} />
+        </button>
+        <button
+          onClick={() => onRemove(task.id)}
+          aria-label="Delete task"
+          className="h-8 w-8 rounded flex items-center justify-center text-ink-mute hover:text-red-500 hover:bg-red-500/10 transition-colors"
+        >
+          <Icon name="trash" size={14} />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+/* ── Empty state ────────────────────────────────────────── */
+const EmptyState = ({ filter }) => {
+  const messages = {
+    all:       { title: 'Nothing filed yet.',    sub: 'Add your first task above to get started.' },
+    active:    { title: 'All caught up.',        sub: 'No active tasks. Take a break — or file a new one.' },
+    completed: { title: 'Nothing marked done.',  sub: 'Complete a task and it will show up here.' },
+  };
+  const msg = messages[filter] || messages.all;
+  return (
+    <div className="py-16 text-center fade-in">
+      <p className="font-display italic text-[1.35rem] text-ink-soft mb-2 display-i">{msg.title}</p>
+      <p className="font-sans text-[13px] text-ink-mute">{msg.sub}</p>
+    </div>
+  );
+};
+
+/* ── Footer bar ─────────────────────────────────────────── */
+const FooterBar = ({ stats, onClearCompleted }) => (
+  <div className="flex justify-between items-center pt-5 mt-2 text-[11px] font-mono tracking-wide text-ink-mute">
+    <span>
+      {stats.total} {stats.total === 1 ? 'task' : 'tasks'} · <span className="italic font-sans">saved to this browser</span>
+    </span>
+    {stats.completed > 0 && (
+      <button
+        onClick={onClearCompleted}
+        className="hover:text-pen underline underline-offset-[3px] decoration-dotted transition-colors"
+      >
+        Clear {stats.completed} done
+      </button>
+    )}
+  </div>
+);
+
+/* ── Colophon (small footer note) ───────────────────────── */
+const Colophon = () => (
+  <div className="mt-20 pt-8 border-t border-double border-rule">
+    <p className="font-mono text-[10px] uppercase tracking-widest text-ink-mute mb-2">Colophon</p>
+    <p className="font-sans text-[13px] leading-relaxed text-ink-soft max-w-md">
+      Column is a single-file React app: <em className="font-display italic">no build step, no backend, no accounts</em>. Your tasks live in localStorage on this device only.
+    </p>
+  </div>
+);
+
+/* ══════════════════════════════════════════════════════════
+   APP
+   ══════════════════════════════════════════════════════════ */
+const App = () => {
+  const [tasks, setTasks]   = useState(loadTasks);
+  const [filter, setFilter] = useState('all');
+  const [dark, setDark]     = useState(loadDark);
+
+  /* Persist tasks */
+  useEffect(() => {
+    localStorage.setItem(LS_TASKS, JSON.stringify(tasks));
+  }, [tasks]);
+
+  /* Persist + apply dark mode */
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', dark);
+    localStorage.setItem(LS_DARK, String(dark));
+  }, [dark]);
+
+  /* Actions */
+  const addTask = text => setTasks(prev => [
+    { id: crypto.randomUUID?.() ?? String(Date.now() + Math.random()),
+      text, done: false, created: Date.now() },
+    ...prev,
+  ]);
+
+  const updateTask = (id, updates) =>
+    setTasks(prev => prev.map(t => (t.id === id ? { ...t, ...updates } : t)));
+
+  const removeTask = id =>
+    setTasks(prev => prev.filter(t => t.id !== id));
+
+  const clearCompleted = () =>
+    setTasks(prev => prev.filter(t => !t.done));
+
+  /* Derived */
+  const stats = useMemo(() => ({
+    total:     tasks.length,
+    active:    tasks.filter(t => !t.done).length,
+    completed: tasks.filter(t =>  t.done).length,
+  }), [tasks]);
+
+  const filtered = useMemo(() => {
+    if (filter === 'active')    return tasks.filter(t => !t.done);
+    if (filter === 'completed') return tasks.filter(t =>  t.done);
+    return tasks;
+  }, [tasks, filter]);
+
+  return (
+    <div className="min-h-screen">
+      <div className="max-w-[640px] mx-auto px-6 py-10 sm:py-14">
+        <BackLink />
+        <Header dark={dark} onToggle={() => setDark(d => !d)} />
+        <TaskInput onAdd={addTask} />
+        <FilterTabs current={filter} onChange={setFilter} stats={stats} />
+
+        <div className="min-h-[220px]">
+          {filtered.length === 0
+            ? <EmptyState filter={filter} />
+            : filtered.map(task => (
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  onUpdate={updateTask}
+                  onRemove={removeTask}
+                />
+              ))
+          }
+        </div>
+
+        <FooterBar stats={stats} onClearCompleted={clearCompleted} />
+        <Colophon />
+      </div>
+    </div>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+
+</body>
+</html>
