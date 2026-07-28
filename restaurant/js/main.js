@@ -1,10 +1,8 @@
 'use strict';
 
-/* =============================================================
-   Sela — main.js  (shared across all pages)
-   ============================================================= */
 
-/* ── Nav scroll behavior ─────────────────────────────────── */
+
+
 const nav = document.getElementById('nav');
 if (nav) {
   window.addEventListener('scroll', () => {
@@ -12,7 +10,7 @@ if (nav) {
   }, { passive: true });
 }
 
-/* ── Mobile drawer ───────────────────────────────────────── */
+
 const toggle = document.getElementById('navToggle');
 const drawer = document.getElementById('navDrawer');
 
@@ -32,11 +30,11 @@ if (toggle && drawer) {
   });
 }
 
-/* ── Footer year ─────────────────────────────────────────── */
+
 const yr = document.getElementById('year');
 if (yr) yr.textContent = new Date().getFullYear();
 
-/* ── Scroll reveals ──────────────────────────────────────── */
+
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (!e.isIntersecting) return;
@@ -47,7 +45,7 @@ const io = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => io.observe(el));
 
-/* ── Reservation form (client-side only) ─────────────────── */
+
 const form = document.getElementById('reservationForm');
 if (form) {
   const dateEl = document.getElementById('r_date');
@@ -56,7 +54,7 @@ if (form) {
   form.addEventListener('submit', e => {
     e.preventDefault();
 
-    /* Honeypot: real users can't fill this */
+    
     if (document.getElementById('r_website')?.value) return;
 
     const status = document.getElementById('formStatus');
@@ -79,8 +77,7 @@ if (form) {
       return;
     }
 
-    /* In a real client site this would POST to a booking system.
-       For the portfolio demo, we simulate a confirmation. */
+    
     status.className = 'form-status show ok';
     status.textContent = `Thank you, ${name.split(' ')[0]}. We'll confirm your table by email within the hour.`;
     form.reset();
