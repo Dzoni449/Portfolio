@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ledger — a personal expense tracker</title>
+<meta name="description" content="A small offline expense tracker with categories, charts, and total spending. Part of Issue No. 001.">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23f6f3ed'/%3E%3Ctext x='32' y='46' font-family='Georgia,serif' font-size='38' font-weight='500' fill='%232b5a3d' text-anchor='middle' font-style='italic'%3EL%3C/text%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ══ TOP BAR ══ -->
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <a href="../../index.html#work" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to portfolio
+    </a>
+    <p class="topbar-brand"><em>Ledger.</em> <span style="color:var(--ink-mute);font-weight:400;">A personal ledger</span></p>
+    <p class="topbar-meta">Saved to this browser</p>
+  </div>
+</div>
+
+<main>
+
+<!-- ══ HEADER ══ -->
+<section class="hero">
+  <div class="wrap hero-inner">
+    <h1 class="hero-title">Ledger</h1>
+    <p class="hero-tagline">Small money, kept honestly. A quiet offline tracker for what leaves your account.</p>
+  </div>
+</section>
+
+<!-- ══ FILTER TABS ══ -->
+<div class="wrap">
+  <div class="filter-row">
+    <div class="filter-tabs" role="tablist">
+      <button class="filter-tab active" data-filter="month"  role="tab" aria-selected="true">This month</button>
+      <button class="filter-tab"        data-filter="30days" role="tab" aria-selected="false">Last 30 days</button>
+      <button class="filter-tab"        data-filter="all"    role="tab" aria-selected="false">All time</button>
+    </div>
+    <p class="filter-note" id="periodNote">Showing this month</p>
+  </div>
+</div>
+
+<!-- ══ SUMMARY ══ -->
+<section class="summary">
+  <div class="wrap">
+    <div class="summary-grid">
+
+      <div class="summary-cell">
+        <span class="summary-label">Total spent</span>
+        <p class="summary-value tabular" id="sumTotal">
+          <span class="currency-sym">€</span><span id="sumTotalMain">0</span><span class="cents" id="sumTotalCents">.00</span>
+        </p>
+        <p class="summary-sub" id="sumTotalSub">Across zero transactions</p>
+      </div>
+
+      <div class="summary-cell">
+        <span class="summary-label">Average per day</span>
+        <p class="summary-value tabular" id="sumAvg">
+          <span class="currency-sym">€</span><span id="sumAvgMain">0</span><span class="cents" id="sumAvgCents">.00</span>
+        </p>
+        <p class="summary-sub" id="sumAvgSub">Over zero days</p>
+      </div>
+
+      <div class="summary-cell">
+        <span class="summary-label">Transactions</span>
+        <p class="summary-value tabular" id="sumCount">0</p>
+        <p class="summary-sub" id="sumCountSub">Since first entry</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ CHARTS ══ -->
+<section class="charts">
+  <div class="wrap">
+    <div class="charts-head">
+      <h2 class="charts-title">Where the <em>money went</em></h2>
+      <p class="filter-note" id="chartsNote">By category · this month</p>
+    </div>
+
+    <div class="charts-grid">
+
+      <!-- Left: doughnut chart -->
+      <div class="chart-panel">
+        <span class="chart-panel-label">By category</span>
+        <div class="chart-canvas-wrap">
+          <canvas id="doughnutChart" role="img" aria-label="Spending by category doughnut chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Right: bar chart -->
+      <div class="chart-panel">
+        <span class="chart-panel-label">By day</span>
+        <div class="chart-canvas-wrap">
+          <canvas id="barChart" role="img" aria-label="Daily spending bar chart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Category breakdown -->
+    <ul class="category-list" id="categoryList"></ul>
+  </div>
+</section>
+
+<!-- ══ ADD EXPENSE ══ -->
+<section class="form-section">
+  <div class="wrap form-section-inner">
+    <div class="form-head">
+      <h2>Add an <em>expense</em></h2>
+      <p class="filter-note">All fields except note are required</p>
+    </div>
+
+    <form class="expense-form" id="expenseForm" novalidate>
+      <div class="form-field">
+        <label for="e_amount">Amount</label>
+        <div class="input-wrap">
+          <span class="currency-prefix">€</span>
+          <input type="number" step="0.01" min="0.01" id="e_amount" placeholder="0.00" class="amount-input tabular" required>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="e_category">Category</label>
+        <div class="input-wrap">
+          <select id="e_category" required>
+            <option value="Groceries">Groceries</option>
+            <option value="Rent &amp; Bills">Rent &amp; Bills</option>
+            <option value="Transport">Transport</option>
+            <option value="Eating out">Eating out</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Health">Health</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="e_desc">Note <span style="text-transform:none;letter-spacing:0;color:var(--ink-faint);">(optional)</span></label>
+        <div class="input-wrap">
+          <input type="text" id="e_desc" placeholder="e.g. groceries at market" maxlength="80">
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="e_date">Date</label>
+        <div class="input-wrap">
+          <input type="date" id="e_date" required>
+        </div>
+      </div>
+
+      <button type="submit" class="form-add-btn" id="addBtn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+        Add
+      </button>
+    </form>
+    <p class="form-error" id="formError">Please enter an amount greater than zero.</p>
+  </div>
+</section>
+
+<!-- ══ TRANSACTIONS ══ -->
+<section class="transactions">
+  <div class="wrap">
+    <div class="transactions-head">
+      <h2>The <em>book</em></h2>
+      <p class="transactions-count" id="txnCount">0 entries</p>
+    </div>
+
+    <div class="transactions-list" id="txnList"></div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span>Ledger · <strong>Portfolio Piece</strong> · Local first · No account</span>
+    <button class="foot-reset" id="resetBtn" title="Clear all data">Reset the book</button>
+  </div>
+</footer>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
