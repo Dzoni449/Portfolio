@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 
-<!-- Tailwind Play CDN + config with editorial tokens -->
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
@@ -43,7 +43,7 @@
 </script>
 
 <style>
-  /* Design tokens — editorial DNA carried over from the portfolio */
+  
   :root {
     --paper:     #efede7;
     --paper-2:   #f5f3ed;
@@ -86,12 +86,12 @@
   ::selection { background: var(--pen); color: var(--paper); }
   :focus-visible { outline: 2px solid var(--pen); outline-offset: 2px; border-radius: 4px; }
 
-  /* Fraunces variable settings */
+  
   .display-h { font-variation-settings: 'opsz' 96, 'SOFT' 60; }
   .display-b { font-variation-settings: 'opsz' 24, 'SOFT' 40; }
   .display-i { font-variation-settings: 'opsz' 24, 'SOFT' 80; }
 
-  /* Task fade-in on mount */
+  
   @keyframes task-in {
     from { opacity: 0; transform: translateY(-4px); max-height: 0; }
     to   { opacity: 1; transform: translateY(0);    max-height: 200px; }
@@ -111,7 +111,7 @@
     }
   }
 
-  /* Hide Tailwind Play CDN production warning */
+  
   #__tailwind-config__ + div { display: none !important; }
 </style>
 </head>
@@ -119,7 +119,7 @@
 
 <div id="root"></div>
 
-<!-- React 18 (production) + Babel standalone for in-browser JSX. Slower first paint, but keeps the source readable. -->
+
 <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -129,7 +129,7 @@
 
 const { useState, useEffect, useRef, useMemo } = React;
 
-/* ── LocalStorage helpers ───────────────────────────────── */
+
 const LS_TASKS = 'column.tasks.v1';
 const LS_DARK  = 'column.dark';
 
@@ -146,7 +146,7 @@ const loadDark = () => {
   return window.matchMedia('(prefers-color-scheme: dark)').matches;
 };
 
-/* ── Icons (inline SVG so no icon lib needed) ───────────── */
+
 const Icon = ({ name, size = 16, className = '' }) => {
   const paths = {
     plus:      <path d="M12 5v14M5 12h14" />,
@@ -165,7 +165,7 @@ const Icon = ({ name, size = 16, className = '' }) => {
   );
 };
 
-/* ── Back-to-portfolio link ─────────────────────────────── */
+
 const BackLink = () => (
   <div className="mb-8">
     <a href="../../index.html#work"
@@ -176,7 +176,7 @@ const BackLink = () => (
   </div>
 );
 
-/* ── Header (logo + dark toggle) ────────────────────────── */
+
 const Header = ({ dark, onToggle }) => (
   <header className="flex items-end justify-between mb-8 pb-6 border-b border-rule">
     <div>
@@ -200,7 +200,7 @@ const Header = ({ dark, onToggle }) => (
   </header>
 );
 
-/* ── Task input ─────────────────────────────────────────── */
+
 const TaskInput = ({ onAdd }) => {
   const [text, setText] = useState('');
 
@@ -234,7 +234,7 @@ const TaskInput = ({ onAdd }) => {
   );
 };
 
-/* ── Filter tabs ────────────────────────────────────────── */
+
 const FilterTabs = ({ current, onChange, stats }) => {
   const tabs = [
     { id: 'all',       label: 'All',    count: stats.total },
@@ -267,7 +267,7 @@ const FilterTabs = ({ current, onChange, stats }) => {
   );
 };
 
-/* ── Individual task item ───────────────────────────────── */
+
 const TaskItem = ({ task, onUpdate, onRemove }) => {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft]     = useState(task.text);
@@ -350,7 +350,7 @@ const TaskItem = ({ task, onUpdate, onRemove }) => {
   );
 };
 
-/* ── Empty state ────────────────────────────────────────── */
+
 const EmptyState = ({ filter }) => {
   const messages = {
     all:       { title: 'Nothing filed yet.',    sub: 'Add your first task above to get started.' },
@@ -366,7 +366,7 @@ const EmptyState = ({ filter }) => {
   );
 };
 
-/* ── Footer bar ─────────────────────────────────────────── */
+
 const FooterBar = ({ stats, onClearCompleted }) => (
   <div className="flex justify-between items-center pt-5 mt-2 text-[11px] font-mono tracking-wide text-ink-mute">
     <span>
@@ -383,7 +383,7 @@ const FooterBar = ({ stats, onClearCompleted }) => (
   </div>
 );
 
-/* ── Colophon (small footer note) ───────────────────────── */
+
 const Colophon = () => (
   <div className="mt-20 pt-8 border-t border-double border-rule">
     <p className="font-mono text-[10px] uppercase tracking-widest text-ink-mute mb-2">Colophon</p>
@@ -401,18 +401,18 @@ const App = () => {
   const [filter, setFilter] = useState('all');
   const [dark, setDark]     = useState(loadDark);
 
-  /* Persist tasks */
+
   useEffect(() => {
     localStorage.setItem(LS_TASKS, JSON.stringify(tasks));
   }, [tasks]);
 
-  /* Persist + apply dark mode */
+
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark);
     localStorage.setItem(LS_DARK, String(dark));
   }, [dark]);
 
-  /* Actions */
+
   const addTask = text => setTasks(prev => [
     { id: crypto.randomUUID?.() ?? String(Date.now() + Math.random()),
       text, done: false, created: Date.now() },
@@ -428,7 +428,7 @@ const App = () => {
   const clearCompleted = () =>
     setTasks(prev => prev.filter(t => !t.done));
 
-  /* Derived */
+
   const stats = useMemo(() => ({
     total:     tasks.length,
     active:    tasks.filter(t => !t.done).length,
